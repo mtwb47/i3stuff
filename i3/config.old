@@ -1,0 +1,93 @@
+set $mod Mod4
+
+exec --no-startup-id xrandr --output HDMI-A-1 --right-of DisplayPort-1 --auto
+
+set $firstMonitor DisplayPort-1
+set $secondMonitor HDMI-A-1
+
+workspace 1 output $firstMonitor
+workspace 2 output $firstMonitor
+workspace 3 output $firstMonitor
+workspace 4 output $firstMonitor
+workspace 5 output $firstMonitor
+workspace 6 output $firstMonitor
+workspace 7 output $firstMonitor
+workspace 8 output $firstMonitor
+workspace 9 output $firstMonitor
+workspace 10 output $firstMonitor
+
+workspace 11 output $secondMonitor
+workspace 12 output $secondMonitor
+workspace 13 output $secondMonitor
+workspace 14 output $secondMonitor
+workspace 15 output $secondMonitor
+workspace 16 output $secondMonitor
+workspace 17 output $secondMonitor
+workspace 18 output $secondMonitor
+workspace 19 output $secondMonitor
+
+bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+X mode "$mode_system"
+bindsym control+mod1+Delete mode "$mode_system"
+
+set $mode_system System (k) lock, (l) logout, (u) suspend, (h) hibernate, (r) reboot, (s) shutdown
+mode "$mode_system" {
+    bindsym k exec --no-startup-id ~/.config/i3/scripts/i3exit.sh lock, mode "default"
+    bindsym l exec --no-startup-id ~/.config/i3/scripts/i3exit.sh logout, mode "default"
+    bindsym u exec --no-startup-id ~/.config/i3/scripts/i3exit.sh suspend, mode "default"
+    bindsym h exec --no-startup-id ~/.config/i3/scripts/i3exit.sh hibernate, mode "default"
+    bindsym r exec --no-startup-id ~/.config/i3/scripts/i3exit.sh reboot, mode "default"
+    bindsym s exec --no-startup-id ~/.config/i3/scripts/i3exit.sh shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+floating_modifier $mod
+for_window [urgent=latest] focus
+default_orientation horizontal
+font pango:Noto Mono Regular 0
+
+assign [class="libreoffice-writer"]  → 2
+for_window [class="libreoffice-writer"] move to workspace 2
+assign [class="steam|Steam"] → 3
+assign [class="Thunderbird|Mail|Geary|Evolution"] → 4
+assign [class="vlc"]  → 17
+for_window [class="vlc"] move to workspace 17
+assign [class="Nemo|Thunar|Caja|nautilus|Nautilus"]  → 18
+
+#startup scripts
+exec_always --no-startup-id i3as.sh 
+exec_always --no-startup-id ~/.config/polybar/launch.sh &
+exec --no-startup-id xfce4-power-manager &
+exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd &
+
+for_window [title="Copying"] floating enable
+for_window [title="Deleting"] floating enable
+for_window [title="Moving"] floating enable
+
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="^Preferences$"] floating enable
+for_window [window_role="setup"] floating enable
+
+for_window [class="Termite"] focus
+new_window normal
+new_float normal
+
+popup_during_fullscreen smart
+
+for_window [class="^.*"] border pixel 1 
+gaps inner 5
+gaps outer 8
+
+# class                 border  backgr. text    indicator
+client.placeholder      #242424 #242424 #242424
+client.background       #242424 #242424 #242424
+client.focused          #faa41a #faa41a #e5e5e5 #bd93f9 
+client.unfocused        #222222 #222222 #aaaaaa #222222
+client.focused_inactive #222222 #222222 #a9a9a9 #222222
+client.urgent           #d42121 #d42121 #f7f7f7 #d42121
+
+
